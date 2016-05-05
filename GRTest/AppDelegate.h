@@ -7,10 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GLView.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@class ViewController;
 
-@property (strong, nonatomic) UIWindow *window;
+@interface AppDelegate : UIResponder <UIApplicationDelegate> {
+    UIWindow * m_window;
+    GLView * m_view;
+}
+
+@property (nonatomic, readonly) ViewController * viewController;
 
 
 @end

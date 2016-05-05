@@ -7,6 +7,9 @@
 //
 
 #import "AppDelegate.h"
+#import <UIKit/UIKit.h>
+#import "GLView.h"
+#import "ViewController.h"
 
 @interface AppDelegate ()
 
@@ -17,6 +20,30 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    m_window = [[UIWindow alloc] initWithFrame: screenBounds];
+    m_view = [[GLView alloc] initWithFrame: screenBounds];
+    //[m_window addSubview: m_view];
+    
+    // Use RootViewController manage CCEAGLView
+    _viewController = [[ViewController alloc] initWithNibName:nil bundle:nil];
+    [_viewController setEdgesForExtendedLayout:UIRectEdgeAll];
+    _viewController.view = m_view;
+    
+    // Set RootViewController to window
+    if ( [[UIDevice currentDevice].systemVersion floatValue] < 6.0)
+    {
+        // warning: addSubView doesn't work on iOS6
+        [m_window addSubview: _viewController.view];
+    }
+    else
+    {
+        // use this method on ios6
+        [m_window setRootViewController:_viewController];
+    }
+    
+    [m_window makeKeyAndVisible];
+    
     return YES;
 }
 

@@ -16,6 +16,8 @@
     EAGLContext * m_context;
 }
 
+@property (strong, nonatomic) EAGLContext * context;
+
 - (void) drawView;
 
 @end
