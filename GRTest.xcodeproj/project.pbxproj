@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FF3883C01CD9083000F0CEB9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FF3883BF1CD9083000F0CEB9 /* main.m */; };
+		FF37CB991CDD1C3800D15B95 /* RenderingEngine1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FF37CB981CDD1C3800D15B95 /* RenderingEngine1.cpp */; };
+		FF3883C01CD9083000F0CEB9 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = FF3883BF1CD9083000F0CEB9 /* main.mm */; };
 		FF3883C31CD9083000F0CEB9 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = FF3883C21CD9083000F0CEB9 /* AppDelegate.mm */; };
 		FF3883C61CD9083000F0CEB9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF3883C51CD9083000F0CEB9 /* ViewController.m */; };
 		FF3883CB1CD9083000F0CEB9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF3883CA1CD9083000F0CEB9 /* Assets.xcassets */; };
@@ -17,8 +18,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FF37CB961CDD120100D15B95 /* IRenderingEngine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IRenderingEngine.hpp; sourceTree = "<group>"; };
+		FF37CB981CDD1C3800D15B95 /* RenderingEngine1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderingEngine1.cpp; sourceTree = "<group>"; };
 		FF3883BB1CD9083000F0CEB9 /* GRTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GRTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		FF3883BF1CD9083000F0CEB9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		FF3883BF1CD9083000F0CEB9 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		FF3883C11CD9083000F0CEB9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		FF3883C21CD9083000F0CEB9 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		FF3883C41CD9083000F0CEB9 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -69,6 +72,8 @@
 				FF3883C21CD9083000F0CEB9 /* AppDelegate.mm */,
 				FF73CC381CDBCC87003AE0B0 /* GLView.h */,
 				FF73CC391CDBCC87003AE0B0 /* GLView.mm */,
+				FF37CB981CDD1C3800D15B95 /* RenderingEngine1.cpp */,
+				FF37CB961CDD120100D15B95 /* IRenderingEngine.hpp */,
 				FF3883C41CD9083000F0CEB9 /* ViewController.h */,
 				FF3883C51CD9083000F0CEB9 /* ViewController.m */,
 				FF3883CA1CD9083000F0CEB9 /* Assets.xcassets */,
@@ -81,7 +86,7 @@
 		FF3883BE1CD9083000F0CEB9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				FF3883BF1CD9083000F0CEB9 /* main.m */,
+				FF3883BF1CD9083000F0CEB9 /* main.mm */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -157,8 +162,9 @@
 			files = (
 				FF3883C61CD9083000F0CEB9 /* ViewController.m in Sources */,
 				FF73CC3A1CDBCC87003AE0B0 /* GLView.mm in Sources */,
+				FF37CB991CDD1C3800D15B95 /* RenderingEngine1.cpp in Sources */,
 				FF3883C31CD9083000F0CEB9 /* AppDelegate.mm in Sources */,
-				FF3883C01CD9083000F0CEB9 /* main.m in Sources */,
+				FF3883C01CD9083000F0CEB9 /* main.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,6 +264,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mycompany.GRTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "7c3e1dce-eea8-44eb-9cd3-d8c0b1dc43ff";
 			};
 			name = Debug;
 		};
@@ -270,6 +277,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mycompany.GRTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "7c3e1dce-eea8-44eb-9cd3-d8c0b1dc43ff";
 			};
 			name = Release;
 		};
