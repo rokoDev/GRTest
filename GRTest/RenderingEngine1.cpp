@@ -11,21 +11,6 @@
 #include <OpenGLES/ES1/glext.h>
 #include "IRenderingEngine.hpp"
 
-struct Vertex {
-    float Position[2];
-    float Color[4];
-};
-
-// Define the positions and colors of two triangles.
-const Vertex Vertices[] = {
-    {{-0.5, -0.866},    {1, 1, 0.5f, 1}},
-    {{0.5, -0.866},     {1, 1, 0.5f, 1}},
-    {{0, 1},            {1, 1, 0.5f, 1}},
-    {{-0.5, -0.866},    {0.5f, 0.5f, 0.5f}},
-    {{0.5, -0.866},     {0.5f, 0.5f, 0.5f}},
-    {{0, -0.4f},        {0.5f, 0.5f, 0.5f}},
-};
-
 static const float RevolutionsPerSecond = 1;
 
 class RenderingEngine1 : public IRenderingEngine
@@ -61,6 +46,7 @@ void RenderingEngine1::Initialize(int width, int height)
     glGenFramebuffersOES(1, &m_framebuffer);
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, m_framebuffer);
     glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, m_renderbuffer);
+    
     glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     

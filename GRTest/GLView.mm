@@ -12,6 +12,8 @@
 #import <OpenGLES/ES2/gl.h> // <-- for GL_RENDERBUFFER only
 #include <OpenGLES/ES1/glext.h>
 
+const bool ForceES1 = false;
+
 @implementation GLView
 
 @synthesize context = m_context;
@@ -35,13 +37,26 @@
         CAEAGLLayer * eaglLayer = (CAEAGLLayer*) super.layer;
         eaglLayer.opaque = YES;
         
-        m_context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
+        EAGLRenderingAPI api = kEAGLRenderingAPIOpenGLES2;
+        
+        m_context = [[EAGLContext alloc] initWithAPI:api];
+        
+        if (!m_context || ForceES1) {
+            api = kEAGLRenderingAPIOpenGLES1;
+            m_context = [[EAGLContext alloc] initWithAPI:api];
+        }
         
         if (!m_context || ![EAGLContext setCurrentContext:m_context]) {
             return nil;
         }
         
-        m_renderingEngine = CreateRenderer1();
+        if (api == kEAGLRenderingAPIOpenGLES1) {
+            NSLog(@"Using OpenGL ES 1.1");
+            m_renderingEngine = CreateRenderer1();
+        } else {
+            NSLog(@"Using OpenGL ES 2.0");
+            m_renderingEngine = CreateRenderer2();
+        }
         
         [m_context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable: eaglLayer];
         

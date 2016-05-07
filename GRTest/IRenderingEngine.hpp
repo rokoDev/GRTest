@@ -22,6 +22,25 @@ enum DeviceOrientation {
     DeviceOrientationFaceDown,
 };
 
+struct Vertex {
+    float Position[2];
+    float Color[4];
+};
+
+// Define the positions and colors of two triangles.
+const Vertex Vertices[] = {
+    {{-0.5, -0.866},    {1, 1, 0.5f, 1}},
+    {{0.5, -0.866},     {1, 1, 0.5f, 1}},
+    {{0, 1},            {1, 1, 0.5f, 1}},
+    {{-0.5, -0.866},    {0.5f, 0.5f, 0.5f}},
+    {{0.5, -0.866},     {0.5f, 0.5f, 0.5f}},
+    {{0, -0.4f},        {0.5f, 0.5f, 0.5f}},
+};
+
+// Creates an instance of the renderer and sets up various OpenGL state.
+struct IRenderingEngine * CreateRenderer1();
+struct IRenderingEngine * CreateRenderer2();
+
 // Interface to the OpenGL ES renderer; consumed by GLView.
 struct IRenderingEngine
 {
@@ -31,8 +50,5 @@ struct IRenderingEngine
     virtual void OnRotate(DeviceOrientation newOrientation) = 0;
     virtual ~IRenderingEngine() {}
 };
-
-// Creates an instance of the renderer and sets up various OpenGL state.
-struct IRenderingEngine * CreateRenderer1();
 
 #endif /* IRenderingEngine_hpp */
