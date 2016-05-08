@@ -36,6 +36,9 @@
 		FF73CC361CD91BBA003AE0B0 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		FF73CC381CDBCC87003AE0B0 /* GLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLView.h; sourceTree = "<group>"; };
 		FF73CC391CDBCC87003AE0B0 /* GLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GLView.mm; sourceTree = "<group>"; };
+		FF9CD5861CDFAA41009D82BA /* Vector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Vector.hpp; sourceTree = "<group>"; };
+		FF9CD5891CDFAD23009D82BA /* Matrix.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Matrix.hpp; sourceTree = "<group>"; };
+		FF9CD58C1CDFB65F009D82BA /* Quaternion.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Quaternion.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +84,7 @@
 				FF37CB961CDD120100D15B95 /* IRenderingEngine.hpp */,
 				FF3883C41CD9083000F0CEB9 /* ViewController.h */,
 				FF3883C51CD9083000F0CEB9 /* ViewController.m */,
+				FF9CD5831CDFA9FD009D82BA /* GraphicMath */,
 				FF73963C1CDE3E9600BB94DB /* Shaders */,
 				FF3883CA1CD9083000F0CEB9 /* Assets.xcassets */,
 				FF3883CF1CD9083000F0CEB9 /* Info.plist */,
@@ -104,6 +108,16 @@
 				FF73963E1CDE3E9600BB94DB /* Simple.vert */,
 			);
 			path = Shaders;
+			sourceTree = "<group>";
+		};
+		FF9CD5831CDFA9FD009D82BA /* GraphicMath */ = {
+			isa = PBXGroup;
+			children = (
+				FF9CD5861CDFAA41009D82BA /* Vector.hpp */,
+				FF9CD5891CDFAD23009D82BA /* Matrix.hpp */,
+				FF9CD58C1CDFB65F009D82BA /* Quaternion.hpp */,
+			);
+			path = GraphicMath;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
