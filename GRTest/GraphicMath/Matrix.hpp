@@ -71,7 +71,7 @@ template <typename T> struct Matrix3 {
     vec3 z;
 };
 
-pragma mark Matrix4
+//pragma mark Matrix4
 
 template <typename T> struct Matrix4 {
     
