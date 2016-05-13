@@ -41,8 +41,8 @@ public:
 private:
     GLuint BuildShader(const char* source, GLenum shaderType) const;
     GLuint BuildProgram(const char* vShader, const char* fShader) const;
-    vector<Vertex> m_coneVertices;
-    vector<GLubyte> m_coneIndices;
+    GLuint m_vertexBuffer;
+    GLuint m_indexBuffer;
     GLuint m_bodyIndexCount;
     GLuint m_diskIndexCount;
     GLuint m_simpleProgram;
@@ -73,10 +73,13 @@ void RenderingEngine2::Initialize(int width, int height)
     const float coneRadius = 0.5f;
     const float coneHeight = 1.866f;
     const int coneSlices = 40;
-    const float dtheta = TwoPi / coneSlices; const int vertexCount = coneSlices * 2 + 1;
-    m_coneVertices.resize(vertexCount); vector<Vertex>::iterator vertex = m_coneVertices.begin();
+    const float dtheta = TwoPi / coneSlices;
+    const int vertexCount = coneSlices * 2 + 1;
+    vector<Vertex> coneVertices(vertexCount);
+    vector<Vertex>::iterator vertex = coneVertices.begin();
+    
     // Cone's body
-    for (float theta = 0; vertex != m_coneVertices.end() - 1; theta += dtheta) {
+    for (float theta = 0; vertex != coneVertices.end() - 1; theta += dtheta) {
         // Grayscale gradient
         float brightness = abs(sin(theta));
         vec4 color(brightness, brightness, brightness, 1);
@@ -101,8 +104,8 @@ void RenderingEngine2::Initialize(int width, int height)
     m_bodyIndexCount = coneSlices * 3;
     m_diskIndexCount = coneSlices * 3;
     
-    m_coneIndices.resize(m_bodyIndexCount + m_diskIndexCount);
-    vector<GLubyte>::iterator index = m_coneIndices.begin();
+    vector<GLubyte> coneIndices(m_bodyIndexCount + m_diskIndexCount);
+    vector<GLubyte>::iterator index = coneIndices.begin();
     
     // Body triangles
     for (int i = 0; i < coneSlices * 2; i += 2) {
@@ -152,6 +155,17 @@ void RenderingEngine2::Initialize(int width, int height)
     GLint projectionUniform = glGetUniformLocation(m_simpleProgram, "Projection");
     mat4 projectionMatrix = mat4::Frustum(-1.6f, 1.6, -2.4, 2.4, 5, 10);
     glUniformMatrix4fv(projectionUniform, 1, 0, projectionMatrix.Pointer());
+    
+    // Create the VBO for the vertices.
+    glGenBuffers(1, &m_vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER,
+                 coneVertices.size() * sizeof(coneVertices[0]), &coneVertices[0], GL_STATIC_DRAW);
+    
+    // Create the VBO for the indices.
+    glGenBuffers(1, &m_indexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, coneIndices.size() * sizeof(coneIndices[0]), &coneIndices[0], GL_STATIC_DRAW);
 }
 
 void RenderingEngine2::UpdateAnimation(float timeStep)
@@ -175,24 +189,25 @@ void RenderingEngine2::Render() const
     mat4 modelviewMatrix = scale * rotation * translation;
     
     GLsizei stride = sizeof(Vertex);
-    const GLvoid* pCoords = &m_coneVertices[0].Position.x;
-    const GLvoid* pColors = &m_coneVertices[0].Color.x;
+    const GLvoid* colorOffset = (GLvoid*) sizeof(vec3);
     
-    glClearColor(0.5f, 0.5f, 0.5f, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUniformMatrix4fv(modelviewUniform, 1, 0, modelviewMatrix.Pointer());
-    glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, stride, pCoords);
-    glVertexAttribPointer(colorSlot, 4, GL_FLOAT, GL_FALSE, stride, pColors);
+    
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+    glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, stride, 0);
+    glVertexAttribPointer(colorSlot, 4, GL_FLOAT, GL_FALSE, stride, colorOffset);
     glEnableVertexAttribArray(positionSlot);
     
-    const GLvoid* bodyIndices = &m_coneIndices[0];
-    const GLvoid* diskIndices = &m_coneIndices[m_bodyIndexCount];
+    const GLvoid* bodyOffset = 0;
+    const GLvoid* diskOffset = (GLvoid*) m_bodyIndexCount;
     
     glEnableVertexAttribArray(colorSlot);
-    glDrawElements(GL_TRIANGLES, m_bodyIndexCount, GL_UNSIGNED_BYTE, bodyIndices);
+    glDrawElements(GL_TRIANGLES, m_bodyIndexCount, GL_UNSIGNED_BYTE, bodyOffset);
     glDisableVertexAttribArray(colorSlot);
     glVertexAttrib4f(colorSlot, 1, 1, 1, 1);
-    glDrawElements(GL_TRIANGLES, m_diskIndexCount, GL_UNSIGNED_BYTE, diskIndices);
+    glDrawElements(GL_TRIANGLES, m_diskIndexCount, GL_UNSIGNED_BYTE, diskOffset);
     
     glDisableVertexAttribArray(positionSlot);
 }

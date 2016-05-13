@@ -34,8 +34,8 @@ public:
     void OnFingerDown(ivec2 location);
     void OnFingerMove(ivec2 oldLocation, ivec2 newLocation);
 private:
-    vector<Vertex> m_coneVertices;
-    vector<GLubyte> m_coneIndices;
+    GLuint m_vertexBuffer;
+    GLuint m_indexBuffer;
     GLuint m_bodyIndexCount;
     GLuint m_diskIndexCount;
     GLfloat m_rotationAngle;
@@ -65,10 +65,13 @@ void RenderingEngine1::Initialize(int width, int height)
     const float coneRadius = 0.5f;
     const float coneHeight = 1.866f;
     const int coneSlices = 40;
-    const float dtheta = TwoPi / coneSlices; const int vertexCount = coneSlices * 2 + 1;
-    m_coneVertices.resize(vertexCount); vector<Vertex>::iterator vertex = m_coneVertices.begin();
+    const float dtheta = TwoPi / coneSlices;
+    const int vertexCount = coneSlices * 2 + 1;
+    vector<Vertex> coneVertices(vertexCount);
+    vector<Vertex>::iterator vertex = coneVertices.begin();
+    
     // Cone's body
-    for (float theta = 0; vertex != m_coneVertices.end() - 1; theta += dtheta) {
+    for (float theta = 0; vertex != coneVertices.end() - 1; theta += dtheta) {
         // Grayscale gradient
         float brightness = abs(sin(theta));
         vec4 color(brightness, brightness, brightness, 1);
@@ -93,8 +96,8 @@ void RenderingEngine1::Initialize(int width, int height)
     m_bodyIndexCount = coneSlices * 3;
     m_diskIndexCount = coneSlices * 3;
     
-    m_coneIndices.resize(m_bodyIndexCount + m_diskIndexCount);
-    vector<GLubyte>::iterator index = m_coneIndices.begin();
+    vector<GLubyte> coneIndices(m_bodyIndexCount + m_diskIndexCount);
+    vector<GLubyte>::iterator index = coneIndices.begin();
     
     // Body triangles
     for (int i = 0; i < coneSlices * 2; i += 2) {
@@ -142,6 +145,17 @@ void RenderingEngine1::Initialize(int width, int height)
     
     glMatrixMode(GL_MODELVIEW);
     glTranslatef(0, 0, -7);
+    
+    // Create the VBO for the vertices.
+    glGenBuffers(1, &m_vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER,
+    coneVertices.size() * sizeof(coneVertices[0]), &coneVertices[0], GL_STATIC_DRAW);
+    
+    // Create the VBO for the indices.
+    glGenBuffers(1, &m_indexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, coneIndices.size() * sizeof(coneIndices[0]), &coneIndices[0], GL_STATIC_DRAW);
 }
 
 void RenderingEngine1::UpdateAnimation(float timeStep)
@@ -155,28 +169,27 @@ void RenderingEngine1::OnRotate(DeviceOrientation orientation)
 
 void RenderingEngine1::Render() const
 {
-    GLsizei stride = sizeof(Vertex);
-    const GLvoid* pCoords = &m_coneVertices[0].Position.x;
-    const GLvoid* pColors = &m_coneVertices[0].Color.x;
-    
-    glClearColor(0.5f, 0.5f, 0.5f, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glPushMatrix();
     glRotatef(m_rotationAngle, 0, 0, 1);
     glScalef(m_scale, m_scale, m_scale);
-    glVertexPointer(3, GL_FLOAT, stride, pCoords);
     
-    glColorPointer(4, GL_FLOAT, stride, pColors);
+    const GLvoid* colorOffset = (GLvoid*) sizeof(vec3);
+    
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+    glVertexPointer(3, GL_FLOAT, sizeof(Vertex), 0);
+    glColorPointer(4, GL_FLOAT, sizeof(Vertex), colorOffset);
     glEnableClientState(GL_VERTEX_ARRAY);
     
-    const GLvoid* bodyIndices = &m_coneIndices[0];
-    const GLvoid* diskIndices = &m_coneIndices[m_bodyIndexCount];
+    const GLvoid* bodyOffset = 0;
+    const GLvoid* diskOffset = (GLvoid*) m_bodyIndexCount;
     
     glEnableClientState(GL_COLOR_ARRAY);
-    glDrawElements(GL_TRIANGLES, m_bodyIndexCount, GL_UNSIGNED_BYTE, bodyIndices);
+    glDrawElements(GL_TRIANGLES, m_bodyIndexCount, GL_UNSIGNED_BYTE, bodyOffset);
     glDisableClientState(GL_COLOR_ARRAY);
     glColor4f(1, 1, 1, 1);
-    glDrawElements(GL_TRIANGLES, m_diskIndexCount, GL_UNSIGNED_BYTE, diskIndices);
+    glDrawElements(GL_TRIANGLES, m_diskIndexCount, GL_UNSIGNED_BYTE, diskOffset);
     
     glDisableClientState(GL_VERTEX_ARRAY);
     glPopMatrix();
