@@ -1,57 +1,39 @@
-//
-//  Matrix.hpp
-//  GRTest
-//
-//  Created by roko on 5/8/16.
-//  Copyright © 2016 roko. All rights reserved.
-//
-
 #pragma once
 #include "Vector.hpp"
 
-#pragma mark Matrix2
-
-template <typename T> struct Matrix2 {
-    
+template <typename T>
+struct Matrix2 {
     Matrix2()
     {
         x.x = 1; x.y = 0;
         y.x = 0; y.y = 1;
     }
-    
     Matrix2(const T* m)
     {
         x.x = m[0]; x.y = m[1];
         y.x = m[2]; y.y = m[3];
     }
-    
     vec2 x;
     vec2 y;
 };
 
-#pragma mark Matrix3
-
-template <typename T> struct Matrix3 {
-    
+template <typename T>
+struct Matrix3 {
     Matrix3()
     {
         x.x = 1; x.y = 0; x.z = 0;
         y.x = 0; y.y = 1; y.z = 0;
         z.x = 0; z.y = 0; z.z = 1;
     }
-    
     Matrix3(const T* m)
     {
         x.x = m[0]; x.y = m[1]; x.z = m[2];
         y.x = m[3]; y.y = m[4]; y.z = m[5];
         z.x = m[6]; z.y = m[7]; z.z = m[8];
     }
-    
     Matrix3(vec3 x, vec3 y, vec3 z) : x(x), y(y), z(z)
     {
-        
     }
-    
     Matrix3 Transposed() const
     {
         Matrix3 m;
@@ -60,21 +42,17 @@ template <typename T> struct Matrix3 {
         m.z.x = x.z; m.z.y = y.z; m.z.z = z.z;
         return m;
     }
-    
     const T* Pointer() const
     {
         return &x.x;
     }
-    
     vec3 x;
     vec3 y;
     vec3 z;
 };
 
-//pragma mark Matrix4
-
-template <typename T> struct Matrix4 {
-    
+template <typename T>
+struct Matrix4 {
     Matrix4()
     {
         x.x = 1; x.y = 0; x.z = 0; x.w = 0;
@@ -82,7 +60,6 @@ template <typename T> struct Matrix4 {
         z.x = 0; z.y = 0; z.z = 1; z.w = 0;
         w.x = 0; w.y = 0; w.z = 0; w.w = 1;
     }
-    
     Matrix4(const Matrix3<T>& m)
     {
         x.x = m.x.x; x.y = m.x.y; x.z = m.x.z; x.w = 0;
@@ -90,15 +67,13 @@ template <typename T> struct Matrix4 {
         z.x = m.z.x; z.y = m.z.y; z.z = m.z.z; z.w = 0;
         w.x = 0; w.y = 0; w.z = 0; w.w = 1;
     }
-    
     Matrix4(const T* m)
     {
-        x.x = m[0]; x.y = m[1]; x.z = m[2]; x.w = m[3];
-        y.x = m[4]; y.y = m[5]; y.z = m[6]; y.w = m[7];
-        z.x = m[8]; z.y = m[9]; z.z = m[10]; z.w = m[11];
+        x.x = m[0];  x.y = m[1];  x.z = m[2];  x.w = m[3];
+        y.x = m[4];  y.y = m[5];  y.z = m[6];  y.w = m[7];
+        z.x = m[8];  z.y = m[9];  z.z = m[10]; z.w = m[11];
         w.x = m[12]; w.y = m[13]; w.z = m[14]; w.w = m[15];
     }
-    
     Matrix4 operator * (const Matrix4& b) const
     {
         Matrix4 m;
@@ -120,7 +95,6 @@ template <typename T> struct Matrix4 {
         m.w.w = w.x * b.x.w + w.y * b.y.w + w.z * b.z.w + w.w * b.w.w;
         return m;
     }
-    
     Vector4<T> operator * (const Vector4<T>& b) const
     {
         Vector4<T> v;
@@ -130,13 +104,11 @@ template <typename T> struct Matrix4 {
         v.w = w.x * b.x + w.y * b.y + w.z * b.z + w.w * b.w;
         return v;
     }
-    
     Matrix4& operator *= (const Matrix4& b)
     {
         Matrix4 m = *this * b;
         return (*this = m);
     }
-    
     Matrix4 Transposed() const
     {
         Matrix4 m;
@@ -146,7 +118,6 @@ template <typename T> struct Matrix4 {
         m.w.x = x.w; m.w.y = y.w; m.w.z = z.w; m.w.w = w.w;
         return m;
     }
-    
     Matrix3<T> ToMat3() const
     {
         Matrix3<T> m;
@@ -155,17 +126,14 @@ template <typename T> struct Matrix4 {
         m.x.z = x.z; m.y.z = y.z; m.z.z = z.z;
         return m;
     }
-    
     const T* Pointer() const
     {
         return &x.x;
     }
-    
     static Matrix4<T> Identity()
     {
         return Matrix4();
     }
-    
     static Matrix4<T> Translate(const Vector3<T>& v)
     {
         Matrix4 m;
@@ -175,7 +143,6 @@ template <typename T> struct Matrix4 {
         m.w.x = v.x; m.w.y = v.y; m.w.z = v.z; m.w.w = 1;
         return m;
     }
-    
     static Matrix4<T> Translate(T x, T y, T z)
     {
         Matrix4 m;
@@ -185,7 +152,6 @@ template <typename T> struct Matrix4 {
         m.w.x = x; m.w.y = y; m.w.z = z; m.w.w = 1;
         return m;
     }
-    
     static Matrix4<T> Scale(T s)
     {
         Matrix4 m;
@@ -195,7 +161,6 @@ template <typename T> struct Matrix4 {
         m.w.x = 0; m.w.y = 0; m.w.z = 0; m.w.w = 1;
         return m;
     }
-    
     static Matrix4<T> Scale(T x, T y, T z)
     {
         Matrix4 m;
@@ -205,7 +170,6 @@ template <typename T> struct Matrix4 {
         m.w.x = 0; m.w.y = 0; m.w.z = 0; m.w.w = 1;
         return m;
     }
-    
     static Matrix4<T> Rotate(T degrees)
     {
         T radians = degrees * 3.14159f / 180.0f;
@@ -213,11 +177,10 @@ template <typename T> struct Matrix4 {
         T c = std::cos(radians);
         
         Matrix4 m = Identity();
-        m.x.x = c; m.x.y = s;
+        m.x.x =  c; m.x.y = s;
         m.y.x = -s; m.y.y = c;
         return m;
     }
-    
     static Matrix4<T> Rotate(T degrees, const vec3& axis)
     {
         T radians = degrees * 3.14159f / 180.0f;
@@ -236,7 +199,6 @@ template <typename T> struct Matrix4 {
         m.z.z = c + (1 - c) * axis.z * axis.z;
         return m;
     }
-    
     static Matrix4<T> Ortho(T left, T right, T bottom, T top, T near, T far)
     {
         T a = 2.0f / (right - left);
@@ -252,7 +214,6 @@ template <typename T> struct Matrix4 {
         m.w.x = 0; m.w.y = 0; m.w.z = 0; m.w.w = 1;
         return m;
     }
-    
     static Matrix4<T> Frustum(T left, T right, T bottom, T top, T near, T far)
     {
         T a = 2 * near / (right - left);
@@ -268,7 +229,6 @@ template <typename T> struct Matrix4 {
         m.w.x = 0; m.w.y = 0; m.w.z = f; m.w.w = 1;
         return m;
     }
-    
     static Matrix4<T> LookAt(const Vector3<T>& eye,
                              const Vector3<T>& target,
                              const Vector3<T>& up)
@@ -282,20 +242,19 @@ template <typename T> struct Matrix4 {
         m.y = Vector4<T>(y, 0);
         m.z = Vector4<T>(z, 0);
         m.w = Vector4<T>(0, 0, 0, 1);
-                         
+        
         Vector4<T> eyePrime = m * Vector4<T>(-eye, 1);
         m = m.Transposed();
         m.w = eyePrime;
-                         
+        
         return m;
     }
-                         
     vec4 x;
     vec4 y;
     vec4 z;
     vec4 w;
 };
-                         
+
 typedef Matrix2<float> mat2;
 typedef Matrix3<float> mat3;
 typedef Matrix4<float> mat4;

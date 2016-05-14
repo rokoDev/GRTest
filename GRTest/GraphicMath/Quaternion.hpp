@@ -1,16 +1,8 @@
-//
-//  Quaternion.hpp
-//  GRTest
-//
-//  Created by roko on 5/8/16.
-//  Copyright © 2016 roko. All rights reserved.
-//
-
 #pragma once
 #include "Matrix.hpp"
 
-template <typename T> struct QuaternionT {
-    
+template <typename T>
+struct QuaternionT {
     T x;
     T y;
     T z;
@@ -40,13 +32,11 @@ template <typename T> struct QuaternionT {
 template <typename T>
 inline QuaternionT<T>::QuaternionT() : x(0), y(0), z(0), w(1)
 {
-    
 }
 
 template <typename T>
 inline QuaternionT<T>::QuaternionT(T x, T y, T z, T w) : x(x), y(y), z(z), w(w)
 {
-    
 }
 
 // Ken Shoemake's famous method.
@@ -111,14 +101,14 @@ inline Matrix3<T> QuaternionT<T>::ToMatrix() const
     T wx, wy, wz;
     T xx, xy, xz;
     T yy, yz, zz;
-    xs = x * s; ys = y * s;   zs = z * s;
+    xs = x * s;  ys = y * s;  zs = z * s;
     wx = w * xs; wy = w * ys; wz = w * zs;
     xx = x * xs; xy = x * ys; xz = x * zs;
     yy = y * ys; yz = y * zs; zz = z * zs;
     Matrix3<T> m;
-    m.x.x = 1 - (yy + zz); m.y.x = xy - wz; m.z.x = xz + wy;
+    m.x.x = 1 - (yy + zz); m.y.x = xy - wz;  m.z.x = xz + wy;
     m.x.y = xy + wz; m.y.y = 1 - (xx + zz); m.z.y = yz - wx;
-    m.x.z = xz - wy; m.y.z = yz + wx; m.z.z = 1 - (xx + yy);
+    m.x.z = xz - wy; m.y.z = yz + wx;  m.z.z = 1 - (xx + yy);
     return m;
 }
 
@@ -152,10 +142,10 @@ bool QuaternionT<T>::operator!=(const QuaternionT<T>& q) const
     return !(*this == q);
 }
 
-// Compute the quaternion that rotates from a to b, avoiding numerical instability. // Taken from "The Shortest Arc Quaternion" by Stan Melax in "Game Programming Gems."
+// Compute the quaternion that rotates from a to b, avoiding numerical instability.
+// Taken from "The Shortest Arc Quaternion" by Stan Melax in "Game Programming Gems".
 template <typename T>
-inline QuaternionT<T> QuaternionT<T>::CreateFromVectors(const Vector3<T>& v0,
-                                                        const Vector3<T>& v1)
+inline QuaternionT<T> QuaternionT<T>::CreateFromVectors(const Vector3<T>& v0, const Vector3<T>& v1)
 {
     if (v0 == -v1)
         return QuaternionT<T>::CreateFromAxisAngle(vec3(1, 0, 0), Pi);
@@ -163,7 +153,7 @@ inline QuaternionT<T> QuaternionT<T>::CreateFromVectors(const Vector3<T>& v0,
     Vector3<T> c = v0.Cross(v1);
     T d = v0.Dot(v1);
     T s = std::sqrt((1 + d) * 2);
-    
+	
     QuaternionT<T> q;
     q.x = c.x / s;
     q.y = c.y / s;
@@ -173,8 +163,7 @@ inline QuaternionT<T> QuaternionT<T>::CreateFromVectors(const Vector3<T>& v0,
 }
 
 template <typename T>
-inline QuaternionT<T> QuaternionT<T>::CreateFromAxisAngle(const Vector3<T>& axis,
-                                                          float radians)
+inline QuaternionT<T>  QuaternionT<T>::CreateFromAxisAngle(const Vector3<T>& axis, float radians)
 {
     QuaternionT<T> q;
     q.w = std::cos(radians / 2);
