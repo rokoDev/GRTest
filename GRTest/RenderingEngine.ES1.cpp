@@ -29,6 +29,7 @@ namespace ES1 {
         vector<Drawable> m_drawables;
         GLuint m_colorRenderbuffer;
         mat4 m_translation;
+        GLuint m_depthRenderbuffer;
     };
     
     IRenderingEngine* CreateRenderingEngine()
@@ -49,20 +50,20 @@ namespace ES1 {
             
             // Create the VBO for the vertices.
             vector<float> vertices;
-            (*surface)->GenerateVertices(vertices);
+            (*surface)->GenerateVertices(vertices, VertexFlagsNormals);
             GLuint vertexBuffer;
             glGenBuffers(1, &vertexBuffer);
             glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
             glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vertices[0]), &vertices[0], GL_STATIC_DRAW);
             
             // Create a new VBO for the indices if needed.
-            int indexCount = (*surface)->GetLineIndexCount();
+            int indexCount = (*surface)->GetTriangleIndexCount();
             GLuint indexBuffer;
             if (!m_drawables.empty() && indexCount == m_drawables[0].IndexCount) {
                 indexBuffer = m_drawables[0].IndexBuffer;
             } else {
                 vector<GLushort> indices(indexCount);
-                (*surface)->GenerateLineIndices(indices);
+                (*surface)->GenerateTriangleIndices(indices);
                 glGenBuffers(1, &indexBuffer);
                 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
                 glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexCount * sizeof(GLushort), &indices[0], GL_STATIC_DRAW);
@@ -72,20 +73,42 @@ namespace ES1 {
             m_drawables.push_back(drawable);
         }
 
+        // Extract width and height from the color buffer.
+        int width, height;
+        glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &width);
+        glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &height);
+        
+        // Create a depth buffer that has the same size as the color buffer.
+        glGenRenderbuffersOES(1, &m_depthRenderbuffer);
+        glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_depthRenderbuffer);
+        glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, width, height);
+        
         // Create the framebuffer object.
         GLuint framebuffer;
         glGenFramebuffersOES(1, &framebuffer);
         glBindFramebufferOES(GL_FRAMEBUFFER_OES, framebuffer);
         glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, m_colorRenderbuffer);
+        glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, m_depthRenderbuffer);
         glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_colorRenderbuffer);
         
+        // Set up various GL state.
         glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_NORMAL_ARRAY);
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
+        glEnable(GL_DEPTH_TEST);
+        
+        // Set up the material properties.
+        vec4 specular(0.5f, 0.5f, 0.5f, 1);
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular.Pointer());
+        glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0f);
         m_translation = mat4::Translate(0, 0, -7);
     }
     
     void RenderingEngine::Render(const vector<Visual>& visuals) const
     {
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(0.5f, 0.5f, 0.5f, 1);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         vector<Visual>::const_iterator visual = visuals.begin();
         for (int visualIndex = 0; visual != visuals.end(); ++visual, ++visualIndex) {
@@ -94,6 +117,12 @@ namespace ES1 {
             ivec2 size = visual->ViewportSize;
             ivec2 lowerLeft = visual->LowerLeft;
             glViewport(lowerLeft.x, lowerLeft.y, size.x, size.y);
+            
+            // Set the light position.
+            glMatrixMode(GL_MODELVIEW);
+            glLoadIdentity();
+            vec4 lightPosition(0.25, 0.25, 1, 0);
+            glLightfv(GL_LIGHT0, GL_POSITION, lightPosition.Pointer());
             
             // Set the model-view transform.
             mat4 rotation = visual->Orientation.ToMatrix();
@@ -107,17 +136,20 @@ namespace ES1 {
             glMatrixMode(GL_PROJECTION);
             glLoadMatrixf(projection.Pointer());
             
-            // Set the color.
-            vec3 color = visual->Color;
-            glColor4f(color.x, color.y, color.z, 1);
+            // Set the diffuse color.
+            vec3 color = visual->Color * 0.75f;
+            vec4 diffuse(color.x, color.y, color.z, 1);
+            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse.Pointer());
             
-            // Draw the wireframe.
-            int stride = sizeof(vec3);
+            // Draw the surface.
+            int stride = 2 * sizeof(vec3);
             const Drawable& drawable = m_drawables[visualIndex];
             glBindBuffer(GL_ARRAY_BUFFER, drawable.VertexBuffer);
             glVertexPointer(3, GL_FLOAT, stride, 0);
+            const GLvoid* normalOffset = (const GLvoid*) sizeof(vec3);
+            glNormalPointer(GL_FLOAT, stride, normalOffset);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawable.IndexBuffer);
-            glDrawElements(GL_LINES, drawable.IndexCount, GL_UNSIGNED_SHORT, 0);
+            glDrawElements(GL_TRIANGLES, drawable.IndexCount, GL_UNSIGNED_SHORT, 0);
         }
     }
 }

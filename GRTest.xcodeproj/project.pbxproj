@@ -22,6 +22,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FF3736381CECA77B00445C2C /* SimpleLighting.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = SimpleLighting.vert; sourceTree = "<group>"; };
+		FF3736391CECB57500445C2C /* PerPixelLighting.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = PerPixelLighting.vert; sourceTree = "<group>"; };
+		FF37363A1CECB58A00445C2C /* PerPixelLighting.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = PerPixelLighting.frag; sourceTree = "<group>"; };
 		FF3883BB1CD9083000F0CEB9 /* GRTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GRTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF3883BF1CD9083000F0CEB9 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		FF3883C11CD9083000F0CEB9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -119,6 +122,9 @@
 			children = (
 				FF73963D1CDE3E9600BB94DB /* Simple.frag */,
 				FF73963E1CDE3E9600BB94DB /* Simple.vert */,
+				FF3736381CECA77B00445C2C /* SimpleLighting.vert */,
+				FF3736391CECB57500445C2C /* PerPixelLighting.vert */,
+				FF37363A1CECB58A00445C2C /* PerPixelLighting.frag */,
 			);
 			path = Shaders;
 			sourceTree = "<group>";
