@@ -10,6 +10,7 @@
 #include "Interfaces.hpp"
 #include "ParametricEquations.hpp"
 #include <algorithm>
+#include "ObjSurface.hpp"
 
 using namespace std;
 
@@ -26,7 +27,7 @@ struct Animation {
 
 class ApplicationEngine : public IApplicationEngine {
 public:
-    ApplicationEngine(IRenderingEngine* renderingEngine);
+    ApplicationEngine(IRenderingEngine* renderingEngine, IResourceManager* resourceManager);
     ~ApplicationEngine();
     void Initialize(int width, int height);
     void OnFingerUp(ivec2 location);
@@ -52,17 +53,19 @@ private:
     int m_pressedButton;
     int m_buttonSurfaces[ButtonCount];
     Animation m_animation;
+    IResourceManager* m_resourceManager;
 };
 
-IApplicationEngine* CreateApplicationEngine(IRenderingEngine* renderingEngine)
+IApplicationEngine* CreateApplicationEngine(IRenderingEngine* renderingEngine, IResourceManager* resourceManager)
 {
-    return new ApplicationEngine(renderingEngine);
+    return new ApplicationEngine(renderingEngine, resourceManager);
 }
 
-ApplicationEngine::ApplicationEngine(IRenderingEngine* renderingEngine) :
+ApplicationEngine::ApplicationEngine(IRenderingEngine* renderingEngine, IResourceManager* resourceManager) :
 m_spinning(false),
 m_renderingEngine(renderingEngine),
-m_pressedButton(-1)
+m_pressedButton(-1),
+m_resourceManager(resourceManager)
 {
     m_animation.Active = false;
     
@@ -88,8 +91,9 @@ void ApplicationEngine::Initialize(int width, int height)
     m_centerPoint = m_screenSize / 2;
     
     vector<ISurface*> surfaces(SurfaceCount);
-    surfaces[0] = new Cone(3, 1);
-    surfaces[1] = new Sphere(1.4f);
+    string path = m_resourceManager->GetResourcePath();
+    surfaces[0] = new ObjSurface(path + "/micronapalmv2.obj");
+    surfaces[1] = new ObjSurface(path + "/Ninja.obj");
     surfaces[2] = new Torus(1.4, 0.3);
     surfaces[3] = new TrefoilKnot(1.8f);
     surfaces[4] = new KleinBottle(0.2f);

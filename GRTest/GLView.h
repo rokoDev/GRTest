@@ -16,6 +16,7 @@
     IRenderingEngine * m_renderingEngine;
     EAGLContext * m_context;
     float m_timestamp;
+    IResourceManager* m_resourceManager;
 }
 
 @property (strong, nonatomic) EAGLContext * context;

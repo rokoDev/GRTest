@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FF37363F1CECC5AE00445C2C /* credits.txt in Resources */ = {isa = PBXBuildFile; fileRef = FF37363C1CECC5AE00445C2C /* credits.txt */; };
+		FF3736401CECC5AE00445C2C /* micronapalmv2.obj in Resources */ = {isa = PBXBuildFile; fileRef = FF37363D1CECC5AE00445C2C /* micronapalmv2.obj */; };
+		FF3736411CECC5AE00445C2C /* Ninja.obj in Resources */ = {isa = PBXBuildFile; fileRef = FF37363E1CECC5AE00445C2C /* Ninja.obj */; };
+		FF3736431CECC7C800445C2C /* ResourceManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = FF3736421CECC7C800445C2C /* ResourceManager.mm */; };
+		FF3736461CECCC0F00445C2C /* ObjSurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FF3736441CECCC0E00445C2C /* ObjSurface.cpp */; };
 		FF3883C01CD9083000F0CEB9 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = FF3883BF1CD9083000F0CEB9 /* main.mm */; };
 		FF3883C31CD9083000F0CEB9 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = FF3883C21CD9083000F0CEB9 /* AppDelegate.mm */; };
 		FF3883C61CD9083000F0CEB9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF3883C51CD9083000F0CEB9 /* ViewController.m */; };
@@ -25,6 +30,12 @@
 		FF3736381CECA77B00445C2C /* SimpleLighting.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = SimpleLighting.vert; sourceTree = "<group>"; };
 		FF3736391CECB57500445C2C /* PerPixelLighting.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = PerPixelLighting.vert; sourceTree = "<group>"; };
 		FF37363A1CECB58A00445C2C /* PerPixelLighting.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = PerPixelLighting.frag; sourceTree = "<group>"; };
+		FF37363C1CECC5AE00445C2C /* credits.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = credits.txt; sourceTree = "<group>"; };
+		FF37363D1CECC5AE00445C2C /* micronapalmv2.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = micronapalmv2.obj; sourceTree = "<group>"; };
+		FF37363E1CECC5AE00445C2C /* Ninja.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Ninja.obj; sourceTree = "<group>"; };
+		FF3736421CECC7C800445C2C /* ResourceManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ResourceManager.mm; sourceTree = "<group>"; };
+		FF3736441CECCC0E00445C2C /* ObjSurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ObjSurface.cpp; sourceTree = "<group>"; };
+		FF3736451CECCC0F00445C2C /* ObjSurface.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ObjSurface.hpp; sourceTree = "<group>"; };
 		FF3883BB1CD9083000F0CEB9 /* GRTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GRTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF3883BF1CD9083000F0CEB9 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		FF3883C11CD9083000F0CEB9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -65,6 +76,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FF37363B1CECC5AE00445C2C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				FF37363C1CECC5AE00445C2C /* credits.txt */,
+				FF37363D1CECC5AE00445C2C /* micronapalmv2.obj */,
+				FF37363E1CECC5AE00445C2C /* Ninja.obj */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		FF3883B21CD9083000F0CEB9 = {
 			isa = PBXGroup;
 			children = (
@@ -97,9 +118,13 @@
 				FF9CD5AA1CE79133009D82BA /* ParametricSurface.hpp */,
 				FF9CD5AC1CE794A2009D82BA /* Interfaces.cpp */,
 				FF9CD5AD1CE794A2009D82BA /* Interfaces.hpp */,
+				FF3736441CECCC0E00445C2C /* ObjSurface.cpp */,
+				FF3736451CECCC0F00445C2C /* ObjSurface.hpp */,
+				FF3736421CECC7C800445C2C /* ResourceManager.mm */,
 				FF9CD5AF1CE7975B009D82BA /* ApplicationEngine.cpp */,
 				FF3883C41CD9083000F0CEB9 /* ViewController.h */,
 				FF3883C51CD9083000F0CEB9 /* ViewController.m */,
+				FF37363B1CECC5AE00445C2C /* Models */,
 				FF9CD5831CDFA9FD009D82BA /* GraphicMath */,
 				FF73963C1CDE3E9600BB94DB /* Shaders */,
 				FF3883CA1CD9083000F0CEB9 /* Assets.xcassets */,
@@ -198,6 +223,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				FF3883CB1CD9083000F0CEB9 /* Assets.xcassets in Resources */,
+				FF37363F1CECC5AE00445C2C /* credits.txt in Resources */,
+				FF3736411CECC5AE00445C2C /* Ninja.obj in Resources */,
+				FF3736401CECC5AE00445C2C /* micronapalmv2.obj in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -211,10 +239,12 @@
 				FF3883C61CD9083000F0CEB9 /* ViewController.m in Sources */,
 				FF9CD5AB1CE79133009D82BA /* ParametricSurface.cpp in Sources */,
 				FF73CC3A1CDBCC87003AE0B0 /* GLView.mm in Sources */,
+				FF3736461CECCC0F00445C2C /* ObjSurface.cpp in Sources */,
 				FF9CD5B01CE7975B009D82BA /* ApplicationEngine.cpp in Sources */,
 				FF9CD5AE1CE794A2009D82BA /* Interfaces.cpp in Sources */,
 				FF3883C31CD9083000F0CEB9 /* AppDelegate.mm in Sources */,
 				FF3883C01CD9083000F0CEB9 /* main.mm in Sources */,
+				FF3736431CECC7C800445C2C /* ResourceManager.mm in Sources */,
 				FF9CD5B21CE79C0E009D82BA /* RenderingEngine.ES2.cpp in Sources */,
 				FF9CD5B61CE79CB4009D82BA /* RenderingEngine.ES1.cpp in Sources */,
 			);

@@ -49,6 +49,8 @@ const bool ForceES1 = false;
             return nil;
         }
         
+        m_resourceManager = CreateResourceManager();
+        
         if (api == kEAGLRenderingAPIOpenGLES1) {
             NSLog(@"Using OpenGL ES 1.1");
             m_renderingEngine = ES1::CreateRenderingEngine();
@@ -57,7 +59,7 @@ const bool ForceES1 = false;
             m_renderingEngine = ES2::CreateRenderingEngine();
         }
         
-        m_applicationEngine = CreateApplicationEngine(m_renderingEngine);
+        m_applicationEngine = CreateApplicationEngine(m_renderingEngine, m_resourceManager);
         
         [m_context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable: eaglLayer];
         

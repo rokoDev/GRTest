@@ -15,6 +15,9 @@
 #include "Vector.hpp"
 #include "Quaternion.hpp"
 #include <vector>
+#include <string>
+
+using std::string;
 
 using std::vector;
 
@@ -55,7 +58,14 @@ struct IRenderingEngine {
     virtual ~IRenderingEngine() {}
 };
 
-IApplicationEngine* CreateApplicationEngine(IRenderingEngine* renderingEngine);
+struct IResourceManager {
+    virtual string GetResourcePath() const = 0;
+    virtual ~IResourceManager() {}
+};
+
+IResourceManager* CreateResourceManager();
+
+IApplicationEngine* CreateApplicationEngine(IRenderingEngine* renderingEngine, IResourceManager* resourceManager);
 namespace ES1 { IRenderingEngine* CreateRenderingEngine(); }
 namespace ES2 { IRenderingEngine* CreateRenderingEngine(); }
 
