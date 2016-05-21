@@ -53,10 +53,10 @@ const bool ForceES1 = false;
         
         if (api == kEAGLRenderingAPIOpenGLES1) {
             NSLog(@"Using OpenGL ES 1.1");
-            m_renderingEngine = ES1::CreateRenderingEngine();
+            m_renderingEngine = ES1::CreateRenderingEngine(m_resourceManager);
         } else {
             NSLog(@"Using OpenGL ES 2.0");
-            m_renderingEngine = ES2::CreateRenderingEngine();
+            m_renderingEngine = ES2::CreateRenderingEngine(m_resourceManager);
         }
         
         m_applicationEngine = CreateApplicationEngine(m_renderingEngine, m_resourceManager);

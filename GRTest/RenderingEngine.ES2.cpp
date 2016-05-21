@@ -24,6 +24,7 @@ namespace ES2 {
         GLint Diffuse;
         GLint Specular;
         GLint Shininess;
+        GLint TextureCoord;
     };
     
     struct Drawable {
@@ -34,7 +35,7 @@ namespace ES2 {
 
     class RenderingEngine : public IRenderingEngine {
     public:
-        RenderingEngine();
+        RenderingEngine(IResourceManager* resourceManager);
         void Initialize(const vector<ISurface*>& surfaces);
         void Render(const vector<Visual>& visuals) const;
     private:
@@ -46,15 +47,18 @@ namespace ES2 {
         GLuint m_depthRenderbuffer;
         UniformHandles m_uniforms;
         AttributeHandles m_attributes;
+        GLuint m_gridTexture;
+        IResourceManager* m_resourceManager;
     };
     
-    IRenderingEngine* CreateRenderingEngine()
+    IRenderingEngine* CreateRenderingEngine(IResourceManager* resourceManager)
     {
-        return new RenderingEngine();
+        return new RenderingEngine(resourceManager);
     }
     
-    RenderingEngine::RenderingEngine()
+    RenderingEngine::RenderingEngine(IResourceManager* resourceManager)
     {
+        m_resourceManager = resourceManager;
         glGenRenderbuffers(1, &m_colorRenderbuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, m_colorRenderbuffer);
     }
@@ -66,7 +70,7 @@ namespace ES2 {
             
             // Create the VBO for the vertices.
             vector<float> vertices;
-            (*surface)->GenerateVertices(vertices, VertexFlagsNormals);
+            (*surface)->GenerateVertices(vertices, VertexFlagsNormals|VertexFlagsTexCoords);
             GLuint vertexBuffer;
             glGenBuffers(1, &vertexBuffer);
             glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -129,9 +133,23 @@ namespace ES2 {
         glVertexAttrib3f(m_attributes.Specular, 0.5, 0.5, 0.5);
         glVertexAttrib1f(m_attributes.Shininess, 50);
         
+        m_attributes.TextureCoord = glGetAttribLocation(program, "TextureCoord");
+        
+        // Load the texture.
+        glGenTextures(1, &m_gridTexture);
+        glBindTexture(GL_TEXTURE_2D, m_gridTexture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        m_resourceManager->LoadPngImage("Grid16.png");
+        void* pixels = m_resourceManager->GetImageData();
+        ivec2 size = m_resourceManager->GetImageSize();
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+        m_resourceManager->UnloadImage();
+        
         // Initialize various state.
         glEnableVertexAttribArray(m_attributes.Position);
         glEnableVertexAttribArray(m_attributes.Normal);
+        glEnableVertexAttribArray(m_attributes.TextureCoord);
         glEnable(GL_DEPTH_TEST);
         
         // Set up transforms.
@@ -218,14 +236,17 @@ namespace ES2 {
             glVertexAttrib4f(m_attributes.Diffuse, color.x, color.y, color.z, 1);
             
             // Draw the surface.
-            int stride = 2 * sizeof(vec3);
-            const GLvoid* offset = (const GLvoid*) sizeof(vec3);
+            int stride = sizeof(vec3) + sizeof(vec3) + sizeof(vec2);
+            const GLvoid* normalOffset = (const GLvoid*) sizeof(vec3);
+            const GLvoid* texCoordOffset = (const GLvoid*) (2 * sizeof(vec3));
             GLint position = m_attributes.Position;
             GLint normal = m_attributes.Normal;
+            GLint texCoord = m_attributes.TextureCoord;
             const Drawable& drawable = m_drawables[visualIndex];
             glBindBuffer(GL_ARRAY_BUFFER, drawable.VertexBuffer);
             glVertexAttribPointer(position, 3, GL_FLOAT, GL_FALSE, stride, 0);
-            glVertexAttribPointer(normal, 3, GL_FLOAT, GL_FALSE, stride, offset);
+            glVertexAttribPointer(normal, 3, GL_FLOAT, GL_FALSE, stride, normalOffset);
+            glVertexAttribPointer(texCoord, 2, GL_FLOAT, GL_FALSE, stride, texCoordOffset);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawable.IndexBuffer);
             glDrawElements(GL_TRIANGLES, drawable.IndexCount, GL_UNSIGNED_SHORT, 0);
         }

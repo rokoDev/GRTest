@@ -3,6 +3,8 @@ const char* SimpleVertexShader = STRINGIFY(
 attribute vec4 Position;
 attribute vec3 Normal;
 attribute vec3 DiffuseMaterial;
+attribute vec2 TextureCoord;
+
 
 uniform mat4 Projection;
 uniform mat4 Modelview;
@@ -13,6 +15,7 @@ uniform vec3 SpecularMaterial;
 uniform float Shininess;
 
 varying vec4 DestinationColor;
+varying vec2 TextureCoordOut;
 
 void main(void)
 {
@@ -28,6 +31,7 @@ void main(void)
     
     DestinationColor = vec4(color, 1);
     gl_Position = Projection * Modelview * Position;
+    TextureCoordOut = TextureCoord;
 }
                                            
 );

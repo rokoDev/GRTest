@@ -60,13 +60,17 @@ struct IRenderingEngine {
 
 struct IResourceManager {
     virtual string GetResourcePath() const = 0;
+    virtual void LoadPngImage(const string& filename) = 0;
+    virtual void* GetImageData() = 0;
+    virtual ivec2 GetImageSize() = 0;
+    virtual void UnloadImage() = 0;
     virtual ~IResourceManager() {}
 };
 
 IResourceManager* CreateResourceManager();
 
 IApplicationEngine* CreateApplicationEngine(IRenderingEngine* renderingEngine, IResourceManager* resourceManager);
-namespace ES1 { IRenderingEngine* CreateRenderingEngine(); }
-namespace ES2 { IRenderingEngine* CreateRenderingEngine(); }
+namespace ES1 { IRenderingEngine* CreateRenderingEngine(IResourceManager* resourceManager); }
+namespace ES2 { IRenderingEngine* CreateRenderingEngine(IResourceManager* resourceManager); }
 
 #endif /* Interfaces_hpp */

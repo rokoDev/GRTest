@@ -91,9 +91,8 @@ void ApplicationEngine::Initialize(int width, int height)
     m_centerPoint = m_screenSize / 2;
     
     vector<ISurface*> surfaces(SurfaceCount);
-    string path = m_resourceManager->GetResourcePath();
-    surfaces[0] = new ObjSurface(path + "/micronapalmv2.obj");
-    surfaces[1] = new ObjSurface(path + "/Ninja.obj");
+    surfaces[0] = new Cone(3, 1);
+    surfaces[1] = new Sphere(1.4f);
     surfaces[2] = new Torus(1.4, 0.3);
     surfaces[3] = new TrefoilKnot(1.8f);
     surfaces[4] = new KleinBottle(0.2f);

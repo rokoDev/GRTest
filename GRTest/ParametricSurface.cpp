@@ -13,6 +13,7 @@ void ParametricSurface::SetInterval(const ParametricInterval& interval)
     m_upperBound = interval.UpperBound;
     m_divisions = interval.Divisions;
     m_slices = m_divisions - ivec2(1, 1);
+    m_textureCount = interval.TextureCount;
 }
 
 int ParametricSurface::GetVertexCount() const
@@ -35,6 +36,8 @@ void ParametricSurface::GenerateVertices(vector<float>& vertices, unsigned char 
     int floatsPerVertex = 3;
     if (flags & VertexFlagsNormals)
         floatsPerVertex += 3;
+    if (flags & VertexFlagsTexCoords)
+        floatsPerVertex += 2;
     
     vertices.resize(GetVertexCount() * floatsPerVertex);
     float* attribute = (float*) &vertices[0];
@@ -65,6 +68,13 @@ void ParametricSurface::GenerateVertices(vector<float>& vertices, unsigned char 
                 if (InvertNormal(domain))
                     normal = -normal;
                 attribute = normal.Write(attribute);
+            }
+            
+            // Compute Texture Coordinates
+            if (flags & VertexFlagsTexCoords) {
+                float s = m_textureCount.x * i / m_slices.x;
+                float t = m_textureCount.y * j / m_slices.y;
+                attribute = vec2(s, t).Write(attribute);
             }
         }
     }

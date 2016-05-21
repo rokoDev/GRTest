@@ -19,6 +19,7 @@
 		FF73CC351CD91B0C003AE0B0 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF73CC341CD91B0C003AE0B0 /* OpenGLES.framework */; };
 		FF73CC371CD91BBA003AE0B0 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF73CC361CD91BBA003AE0B0 /* QuartzCore.framework */; };
 		FF73CC3A1CDBCC87003AE0B0 /* GLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FF73CC391CDBCC87003AE0B0 /* GLView.mm */; };
+		FF7BA4A51CEFAED800F8F422 /* Grid16.png in Resources */ = {isa = PBXBuildFile; fileRef = FF7BA4A41CEFAED800F8F422 /* Grid16.png */; };
 		FF9CD5AB1CE79133009D82BA /* ParametricSurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FF9CD5A91CE79133009D82BA /* ParametricSurface.cpp */; };
 		FF9CD5AE1CE794A2009D82BA /* Interfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FF9CD5AC1CE794A2009D82BA /* Interfaces.cpp */; };
 		FF9CD5B01CE7975B009D82BA /* ApplicationEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FF9CD5AF1CE7975B009D82BA /* ApplicationEngine.cpp */; };
@@ -50,6 +51,7 @@
 		FF73CC361CD91BBA003AE0B0 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		FF73CC381CDBCC87003AE0B0 /* GLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLView.h; sourceTree = "<group>"; };
 		FF73CC391CDBCC87003AE0B0 /* GLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GLView.mm; sourceTree = "<group>"; };
+		FF7BA4A41CEFAED800F8F422 /* Grid16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Grid16.png; sourceTree = "<group>"; };
 		FF9CD5861CDFAA41009D82BA /* Vector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Vector.hpp; sourceTree = "<group>"; };
 		FF9CD5891CDFAD23009D82BA /* Matrix.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Matrix.hpp; sourceTree = "<group>"; };
 		FF9CD58C1CDFB65F009D82BA /* Quaternion.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Quaternion.hpp; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 				FF9CD5AF1CE7975B009D82BA /* ApplicationEngine.cpp */,
 				FF3883C41CD9083000F0CEB9 /* ViewController.h */,
 				FF3883C51CD9083000F0CEB9 /* ViewController.m */,
+				FF7BA4A31CEFAEB500F8F422 /* Textures */,
 				FF37363B1CECC5AE00445C2C /* Models */,
 				FF9CD5831CDFA9FD009D82BA /* GraphicMath */,
 				FF73963C1CDE3E9600BB94DB /* Shaders */,
@@ -152,6 +155,14 @@
 				FF37363A1CECB58A00445C2C /* PerPixelLighting.frag */,
 			);
 			path = Shaders;
+			sourceTree = "<group>";
+		};
+		FF7BA4A31CEFAEB500F8F422 /* Textures */ = {
+			isa = PBXGroup;
+			children = (
+				FF7BA4A41CEFAED800F8F422 /* Grid16.png */,
+			);
+			path = Textures;
 			sourceTree = "<group>";
 		};
 		FF9CD5831CDFA9FD009D82BA /* GraphicMath */ = {
@@ -225,6 +236,7 @@
 				FF3883CB1CD9083000F0CEB9 /* Assets.xcassets in Resources */,
 				FF37363F1CECC5AE00445C2C /* credits.txt in Resources */,
 				FF3736411CECC5AE00445C2C /* Ninja.obj in Resources */,
+				FF7BA4A51CEFAED800F8F422 /* Grid16.png in Resources */,
 				FF3736401CECC5AE00445C2C /* micronapalmv2.obj in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

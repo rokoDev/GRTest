@@ -22,7 +22,7 @@ namespace ES1 {
     
     class RenderingEngine : public IRenderingEngine {
     public:
-        RenderingEngine();
+        RenderingEngine(IResourceManager* resourceManager);
         void Initialize(const vector<ISurface*>& surfaces);
         void Render(const vector<Visual>& visuals) const;
     private:
@@ -30,15 +30,18 @@ namespace ES1 {
         GLuint m_colorRenderbuffer;
         mat4 m_translation;
         GLuint m_depthRenderbuffer;
+        GLuint m_gridTexture;
+        IResourceManager* m_resourceManager;
     };
     
-    IRenderingEngine* CreateRenderingEngine()
+    IRenderingEngine* CreateRenderingEngine(IResourceManager* resourceManager)
     {
-        return new RenderingEngine();
+        return new RenderingEngine(resourceManager);
     }
     
-    RenderingEngine::RenderingEngine()
+    RenderingEngine::RenderingEngine(IResourceManager* resourceManager)
     {
+        m_resourceManager = resourceManager;
         glGenRenderbuffersOES(1, &m_colorRenderbuffer);
         glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_colorRenderbuffer);
     }
@@ -50,7 +53,7 @@ namespace ES1 {
             
             // Create the VBO for the vertices.
             vector<float> vertices;
-            (*surface)->GenerateVertices(vertices, VertexFlagsNormals);
+            (*surface)->GenerateVertices(vertices, VertexFlagsNormals|VertexFlagsTexCoords);
             GLuint vertexBuffer;
             glGenBuffers(1, &vertexBuffer);
             glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -91,12 +94,25 @@ namespace ES1 {
         glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, m_depthRenderbuffer);
         glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_colorRenderbuffer);
         
+        // Load the texture.
+        glGenTextures(1, &m_gridTexture);
+        glBindTexture(GL_TEXTURE_2D, m_gridTexture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        m_resourceManager->LoadPngImage("Grid16.png");
+        void* pixels = m_resourceManager->GetImageData();
+        ivec2 size = m_resourceManager->GetImageSize();
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+        m_resourceManager->UnloadImage();
+        
         // Set up various GL state.
         glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_NORMAL_ARRAY);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
         glEnable(GL_LIGHTING);
         glEnable(GL_LIGHT0);
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_TEXTURE_2D);
         
         // Set up the material properties.
         vec4 specular(0.5f, 0.5f, 0.5f, 1);
@@ -142,12 +158,14 @@ namespace ES1 {
             glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse.Pointer());
             
             // Draw the surface.
-            int stride = 2 * sizeof(vec3);
+            int stride = sizeof(vec3) + sizeof(vec3) + sizeof(vec2);
+            const GLvoid* texCoordOffset = (const GLvoid*) (2 * sizeof(vec3));
             const Drawable& drawable = m_drawables[visualIndex];
             glBindBuffer(GL_ARRAY_BUFFER, drawable.VertexBuffer);
             glVertexPointer(3, GL_FLOAT, stride, 0);
             const GLvoid* normalOffset = (const GLvoid*) sizeof(vec3);
             glNormalPointer(GL_FLOAT, stride, normalOffset);
+            glTexCoordPointer(2, GL_FLOAT, stride, texCoordOffset);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawable.IndexBuffer);
             glDrawElements(GL_TRIANGLES, drawable.IndexCount, GL_UNSIGNED_SHORT, 0);
         }

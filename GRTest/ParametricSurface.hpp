@@ -15,6 +15,7 @@
 struct ParametricInterval {
     ivec2 Divisions;
     vec2 UpperBound;
+    vec2 TextureCount;
 };
 
 class ParametricSurface : public ISurface
@@ -37,6 +38,7 @@ private:
     vec2 m_upperBound;
     ivec2 m_slices;
     ivec2 m_divisions;
+    vec2 m_textureCount;
 };
 
 #endif /* ParametricSurface_hpp */
