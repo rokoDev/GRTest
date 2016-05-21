@@ -22,16 +22,37 @@ public:
         return [bundlePath UTF8String];
     }
     
-    void LoadPngImage(const string& name)
+    TextureDescription LoadPngImage(const string& name)
     {
         NSString* basePath = [NSString stringWithUTF8String:name.c_str()];
         NSString* resourcePath = [[NSBundle mainBundle] resourcePath];
         NSString* fullPath = [resourcePath stringByAppendingPathComponent:basePath];
+        
+        NSLog(@"Loading PNG image %@...", fullPath);
+        
         UIImage* uiImage = [UIImage imageWithContentsOfFile:fullPath];
         CGImageRef cgImage = uiImage.CGImage;
-        m_imageSize.x = CGImageGetWidth(cgImage);
-        m_imageSize.y = CGImageGetHeight(cgImage);
         m_imageData = CGDataProviderCopyData(CGImageGetDataProvider(cgImage));
+        
+        TextureDescription description;
+        description.Size.x = CGImageGetWidth(cgImage);
+        description.Size.y = CGImageGetHeight(cgImage);
+        bool hasAlpha = CGImageGetAlphaInfo(cgImage) != kCGImageAlphaNone;
+        CGColorSpaceRef colorSpace = CGImageGetColorSpace(cgImage);
+        switch (CGColorSpaceGetModel(colorSpace)) {
+            case kCGColorSpaceModelMonochrome:
+                description.Format = hasAlpha ? TextureFormatGrayAlpha : TextureFormatGray;
+                break;
+            case kCGColorSpaceModelRGB: description.Format = hasAlpha ? TextureFormatRgba : TextureFormatRgb;
+                break;
+            default:
+                assert(!"Unsupported color space.");
+                break;
+        }
+        
+        description.BitsPerComponent = CGImageGetBitsPerComponent(cgImage);
+        
+        return description;
     }
     
     void* GetImageData()

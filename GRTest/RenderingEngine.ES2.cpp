@@ -3,6 +3,7 @@
 #include "Interfaces.hpp"
 #include "Matrix.hpp"
 #include <iostream>
+#include <assert.h>
 
 namespace ES2 {
 
@@ -39,6 +40,7 @@ namespace ES2 {
         void Initialize(const vector<ISurface*>& surfaces);
         void Render(const vector<Visual>& visuals) const;
     private:
+        void SetPngTexture(const string& name) const;
         GLuint BuildShader(const char* source, GLenum shaderType) const;
         GLuint BuildProgram(const char* vShader, const char* fShader) const;
         vector<Drawable> m_drawables;
@@ -140,12 +142,8 @@ namespace ES2 {
         glBindTexture(GL_TEXTURE_2D, m_gridTexture);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        m_resourceManager->LoadPngImage("Grid16.png");
-        void* pixels = m_resourceManager->GetImageData();
-        ivec2 size = m_resourceManager->GetImageSize();
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+        SetPngTexture("Grid16.png");
         glGenerateMipmap(GL_TEXTURE_2D);
-        m_resourceManager->UnloadImage();
         
         // Initialize various state.
         glEnableVertexAttribArray(m_attributes.Position);
@@ -251,5 +249,37 @@ namespace ES2 {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawable.IndexBuffer);
             glDrawElements(GL_TRIANGLES, drawable.IndexCount, GL_UNSIGNED_SHORT, 0);
         }
+    }
+    
+    void RenderingEngine::SetPngTexture(const string& name) const
+    {
+        TextureDescription description = m_resourceManager->LoadPngImage(name);
+        
+        GLenum format;
+        switch (description.Format) {
+            case TextureFormatGray:         format = GL_LUMINANCE;          break;
+            case TextureFormatGrayAlpha:    format = GL_LUMINANCE_ALPHA;    break;
+            case TextureFormatRgb:          format = GL_RGB;                break;
+            case TextureFormatRgba:         format = GL_RGBA;               break;
+        }
+        
+        GLenum type;
+        switch (description.BitsPerComponent) {
+            case 8: type = GL_UNSIGNED_BYTE; break;
+            case 4:
+                if (format == GL_RGBA) {
+                    type = GL_UNSIGNED_SHORT_4_4_4_4;
+                    break;
+                }
+                // intentionally fall through
+            default:
+                assert(!"Unsupported format.");
+                break;
+        }
+        
+        void* data = m_resourceManager->GetImageData();
+        ivec2 size = description.Size;
+        glTexImage2D(GL_TEXTURE_2D, 0, format, size.x, size.y, 0, format, type, data);
+        m_resourceManager->UnloadImage();
     }
 }

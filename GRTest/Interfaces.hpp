@@ -58,9 +58,22 @@ struct IRenderingEngine {
     virtual ~IRenderingEngine() {}
 };
 
+enum TextureFormat {
+    TextureFormatGray,
+    TextureFormatGrayAlpha,
+    TextureFormatRgb,
+    TextureFormatRgba
+};
+
+struct TextureDescription {
+    TextureFormat Format;
+    int BitsPerComponent;
+    ivec2 Size;
+};
+
 struct IResourceManager {
     virtual string GetResourcePath() const = 0;
-    virtual void LoadPngImage(const string& filename) = 0;
+    virtual TextureDescription LoadPngImage(const string& filename) = 0;
     virtual void* GetImageData() = 0;
     virtual ivec2 GetImageSize() = 0;
     virtual void UnloadImage() = 0;
