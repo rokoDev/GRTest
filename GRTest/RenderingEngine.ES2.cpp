@@ -138,12 +138,13 @@ namespace ES2 {
         // Load the texture.
         glGenTextures(1, &m_gridTexture);
         glBindTexture(GL_TEXTURE_2D, m_gridTexture);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         m_resourceManager->LoadPngImage("Grid16.png");
         void* pixels = m_resourceManager->GetImageData();
         ivec2 size = m_resourceManager->GetImageSize();
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+        glGenerateMipmap(GL_TEXTURE_2D);
         m_resourceManager->UnloadImage();
         
         // Initialize various state.

@@ -97,7 +97,8 @@ namespace ES1 {
         // Load the texture.
         glGenTextures(1, &m_gridTexture);
         glBindTexture(GL_TEXTURE_2D, m_gridTexture);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         m_resourceManager->LoadPngImage("Grid16.png");
         void* pixels = m_resourceManager->GetImageData();
